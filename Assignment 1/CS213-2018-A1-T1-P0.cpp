@@ -205,20 +205,20 @@ matrix operator*(const matrix& mat1, const int scalar)
 
 matrix& operator+=(matrix & mat1, const matrix& mat2)
 {
-	return mat1 = matrix(mat1 + mat2);
+	return mat1 = mat1 + mat2;
 }
 
 matrix& operator-=(matrix & mat1, const matrix& mat2)
 {
-	return mat1 = matrix(mat1 - mat2);
+	return mat1 = mat1 - mat2;
 }
 matrix& operator+=(matrix & mat1, const int scaler)
 {
-	return mat1 = matrix(mat1 + scaler);
+	return mat1 = mat1 + scaler;
 }
 matrix& operator-=(matrix & mat1, const int scaler)
 {
-	return mat1 = matrix(mat1 - scaler);
+	return mat1 = mat1 - scaler;
 }
 
 matrix& operator++ (matrix& mat) {
@@ -253,7 +253,6 @@ istream & operator>>(istream & in, matrix & mat)
 	return in;
 }
 
-//TODO: make it look nice when printed out using iomanip
 ostream & operator<<(ostream & out, const matrix& mat)
 {
 	for (int i = 0; i < mat.row; ++i){
@@ -264,6 +263,7 @@ ostream & operator<<(ostream & out, const matrix& mat)
 	return out;
 }
 
+//TODO: make it look nice when printed out using iomanip
 bool operator==(const matrix& mat1, const matrix& mat2)
 {
 	if (mat1.col != mat2.col || mat1.row != mat1.row) return false;
