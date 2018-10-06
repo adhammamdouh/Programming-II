@@ -26,8 +26,7 @@ using namespace std;
 struct matrix
 {
 	int** data;
-	int row = 0, col = 0;
-
+	int row, col;
 	void allocate_memory(const int row, const int col) {
 		this->row = row;
 		this->col = col;
@@ -39,10 +38,8 @@ struct matrix
 			data[i] = new int[col];
 	}
 
-	//default uninitiated constructor.
-	matrix() { }
 	// a constructor that takes the rows and columns count and initializes the memory with zeros.
-	matrix(const int row, const int col) {
+	matrix(const int row = 0, const int col = 0) {
 		allocate_memory(row, col);
 	}
 
@@ -60,21 +57,34 @@ struct matrix
 	matrix(const matrix& old) {
 		*this = old;
 	}
+	// a similar constructor, but for moving. Used when old is disposable,
+	// such as if it is the return value of a function or a calculation.
+	// std::move is there so that the second = operator is used instead of the first.
+	matrix(matrix&& old) {
+		*this = std::move(old);
+	}
 
 	// a copy operator for the = operator
 	matrix& operator=(const matrix& old) {
 		if (this->row + this->col != 0)
 			this->~matrix();
-		
+
 		allocate_memory(old.row, old.col);
-		
+
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++)
 				data[i][j] = old[i][j];
 		}
 		return *this;
 	}
-
+	// a move operator for the = operator
+	matrix& operator=(matrix&& old) {
+		this->~matrix();
+		data = old.data;
+		row = old.row; col = old.col;
+		old.row = old.col = 0;
+		return *this;
+	}
 	//overloaded the [] operators so that the matrix' data can be accessed using
 	//mat[i][j] instead of mat.data[i][j].
 	int* operator[] (int i) const {
@@ -88,7 +98,6 @@ struct matrix
 			delete[] data[i];
 		delete[] data;
 	}
-
 };
 
 matrix operator+  (const matrix& mat1, const matrix& mat2); // Add if same dimensions
@@ -146,9 +155,12 @@ int main()
 			matrix temp = test1;
 			test1 = test2;
 			test2 = temp;
+			temp = 3 * test1;
+			temp = test1 * 11;
+			temp = test1 + test2;
 		}
 	*/
-	
+
 	matrix mat1(4, 2, data1),
 		mat2(2, 3, data2),
 		mat3(4, 2, data3),
@@ -172,7 +184,7 @@ int main()
 	cout << "mat1++:" << endl;
 	cout << mat1++ << endl;
 	cout << "Matrix 1 is:" << endl << mat1 << endl;
-	cout << "mat4 = 7 * mat1 + mat3 * 2 is: " << ((7 * mat1 + mat3 * 2 == mat4)?"true":"false") << endl;
+	cout << "mat4 = 7 * mat1 + mat3 * 2 is: " << ((7 * mat1 + mat3 * 2 == mat4) ? "true" : "false") << endl;
 	cout << "----mat1:" << endl;
 	cout << ----mat1 << endl;
 
